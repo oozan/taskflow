@@ -2,6 +2,7 @@ import { useTaskContext, Task } from "../context/TaskContext";
 import TaskCard from "../components/TaskCard";
 import TaskModal from "../components/TaskModal";
 import { useState, useEffect } from "react";
+import Head from "next/head";
 
 type TaskStatus = "todo" | "in-progress" | "done";
 
@@ -60,62 +61,76 @@ const TaskBoard = () => {
   };
 
   return (
-    <div className="p-8 min-h-screen bg-gray-900 text-white">
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-3xl font-bold text-blue-400">All Boards</h1>
-        <button
-          onClick={handleAddTaskClick}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg shadow-lg font-semibold"
-        >
-          + Add Task
-        </button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {Object.entries(columns).map(([columnId, columnTasks]) => {
-          const status = columnId as TaskStatus;
-          const columnTitle =
-            status === "todo"
-              ? "To Do"
-              : status === "in-progress"
-              ? "In Progress"
-              : "Done";
+    <>
+      <Head>
+        <title>Task Board</title>
+      </Head>
+      <main className="p-8 min-h-screen bg-gray-900 text-white">
+        <div className="flex justify-between items-center mb-10">
+          <h1 className="text-3xl font-bold text-blue-400">All Boards</h1>
+          <button
+            onClick={handleAddTaskClick}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg shadow-lg font-semibold"
+            aria-label="Add New Task"
+          >
+            + Add Task
+          </button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {Object.entries(columns).map(([columnId, columnTasks]) => {
+            const status = columnId as TaskStatus;
+            const columnTitle =
+              status === "todo"
+                ? "To Do"
+                : status === "in-progress"
+                ? "In Progress"
+                : "Done";
 
-          return (
-            <div
-              key={status}
-              onDragOver={allowDrop}
-              onDrop={(e) => handleDrop(e, status)}
-              className="bg-gray-800 p-6 rounded-lg shadow-lg min-h-[300px]"
-            >
-              <h2 className="text-lg font-semibold text-white mb-4">
-                {columnTitle}
-              </h2>
-              <div className="space-y-4">
-                {(columnTasks as Task[]).map((task) => (
-                  <div
-                    key={task.id}
-                    onClick={() => {
-                      setSelectedTask(task);
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    <TaskCard task={task} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            return (
+              <section
+                key={status}
+                onDragOver={(e) =>
+                  allowDrop(e as React.DragEvent<HTMLDivElement>)
+                }
+                onDrop={(e) =>
+                  handleDrop(e as React.DragEvent<HTMLDivElement>, status)
+                }
+                className="bg-gray-800 p-6 rounded-lg shadow-lg min-h-[300px]"
+                aria-labelledby={`${status}-heading`}
+              >
+                <h2
+                  id={`${status}-heading`}
+                  className="text-lg font-semibold text-white mb-4"
+                >
+                  {columnTitle}
+                </h2>
+                <div className="space-y-4">
+                  {(columnTasks as Task[]).map((task) => (
+                    <div
+                      key={task.id}
+                      onClick={() => {
+                        setSelectedTask(task);
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      <TaskCard task={task} />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
 
-      {isModalOpen && (
-        <TaskModal
-          onClose={() => setIsModalOpen(false)}
-          onSave={handleSaveTask}
-          task={selectedTask}
-        />
-      )}
-    </div>
+        {isModalOpen && (
+          <TaskModal
+            onClose={() => setIsModalOpen(false)}
+            onSave={handleSaveTask}
+            task={selectedTask}
+          />
+        )}
+      </main>
+    </>
   );
 };
 
