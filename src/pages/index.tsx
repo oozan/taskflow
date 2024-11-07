@@ -14,7 +14,7 @@ const Home = () => {
         <Link
           className="px-6 py-3 text-lg font-bold text-white bg-blue-500 rounded"
           href="/taskboard"
-          aria-label="Go to the Task Board page"
+          aria-label="Go to Task Board"
         >
           Go to Task Board
         </Link>

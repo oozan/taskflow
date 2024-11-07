@@ -65,13 +65,13 @@ const TaskBoard = () => {
       <Head>
         <title>Task Board</title>
       </Head>
-      <main className="p-8 min-h-screen bg-gray-900 text-white">
+      <main className="p-8 min-h-screen bg-gray-900 text-white" role="main">
         <div className="flex justify-between items-center mb-10">
           <h1 className="text-3xl font-bold text-blue-400">All Boards</h1>
           <button
             onClick={handleAddTaskClick}
             className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg shadow-lg font-semibold"
-            aria-label="Add New Task"
+            aria-label="Add new task"
           >
             + Add Task
           </button>
